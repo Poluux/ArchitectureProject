@@ -1,10 +1,12 @@
-﻿namespace ArchitectureProject
+﻿using DataAccessLayer;
+
+namespace ArchitectureProject
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+          //  using var context = new MS_SQLContext();
         }
     }
 }
