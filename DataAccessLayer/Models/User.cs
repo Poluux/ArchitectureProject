@@ -10,6 +10,7 @@ namespace DataAccessLayer.Models
     {
         public int UserId { get; set; }
         public string Username { get; set; }
+        public int IdCard { get; set; }
         public double Balance { get; set; }
         public int Quota { get; set; }
     }
