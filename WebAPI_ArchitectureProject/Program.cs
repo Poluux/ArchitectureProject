@@ -17,6 +17,8 @@ namespace WebAPI_ArchitectureProject
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<MS_SQLContext>(options => options.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=MS-SQL_Accounts"));
+            builder.Services.AddDbContext<PaymentContext>(options => options.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=PaymentDB"));
+
 
             var app = builder.Build();
 
