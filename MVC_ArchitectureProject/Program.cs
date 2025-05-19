@@ -1,3 +1,5 @@
+using MVC_ArchitectureProject.Services;
+
 namespace MVC_ArchitectureProject
 {
     public class Program
@@ -8,6 +10,7 @@ namespace MVC_ArchitectureProject
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddHttpClient<IBalanceServiceMVC, BalanceServiceMVC>();
 
             var app = builder.Build();
 
@@ -28,7 +31,7 @@ namespace MVC_ArchitectureProject
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=ArchitectureProject}/{action=Index}/{id?}");
 
             app.Run();
         }
