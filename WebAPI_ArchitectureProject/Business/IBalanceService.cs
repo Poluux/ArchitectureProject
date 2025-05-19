@@ -1,7 +1,9 @@
-﻿namespace WebAPI_ArchitectureProject.Business
+﻿using WebAPI_ArchitectureProject.Model;
+
+namespace WebAPI_ArchitectureProject.Business
 {
     public interface IBalanceService
     {
-        Task<double?> getUserBalanceAsync(string username);
+        Task<UserBalanceModel> getUserBalanceAsync(string username);
     }
 }

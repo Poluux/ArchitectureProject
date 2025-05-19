@@ -1,6 +1,8 @@
 ﻿using DataAccessLayer;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using WebAPI_ArchitectureProject.Extension;
+using WebAPI_ArchitectureProject.Model;
 
 namespace WebAPI_ArchitectureProject.Business
 {
@@ -13,11 +15,11 @@ namespace WebAPI_ArchitectureProject.Business
             _sqlContext = sqlContext;
         }
 
-        public async Task<double?> getUserBalanceAsync(string username)
+        public async Task<UserBalanceModel> getUserBalanceAsync(string username)
         {
             return await _sqlContext.Users
                                      .Where(u => u.Username == username)
-                                     .Select(u => (double?)u.Balance)
+                                     .Select(u => u.ToUserBalanceModel())
                                      .FirstOrDefaultAsync();
         }
     }

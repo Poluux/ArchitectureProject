@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI_ArchitectureProject.Business;
+using WebAPI_ArchitectureProject.Model;
 
 namespace WebAPI_ArchitectureProject.Controllers
 {
@@ -15,16 +16,16 @@ namespace WebAPI_ArchitectureProject.Controllers
         }
 
         [HttpGet("balance/{username}")]
-        public async Task<ActionResult<double>> GetUserBalance(string username)
+        public async Task<ActionResult<UserBalanceModel>> GetUserBalance(string username)
         {
-            var balance = await _balanceService.getUserBalanceAsync(username);
+            var userBalanceModel = await _balanceService.getUserBalanceAsync(username);
 
-            if (balance == null)
+            if (userBalanceModel == null)
             {
                 return NotFound();
             }
 
-            return Ok(balance);
+            return Ok(userBalanceModel);
         }
     }
 }
