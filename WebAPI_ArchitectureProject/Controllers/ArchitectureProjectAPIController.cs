@@ -19,7 +19,7 @@ namespace WebAPI_ArchitectureProject.Controllers
         [HttpGet("balance/{username}")]
         public async Task<ActionResult<UserBalanceModel>> GetUserBalance(string username)
         {
-            var user = await _balanceService.getUserAsync(username);
+            var user = await _balanceService.FetchBalanceByUsername(username);
 
             if (user == null)
             {

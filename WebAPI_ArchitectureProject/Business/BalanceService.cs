@@ -16,7 +16,7 @@ namespace WebAPI_ArchitectureProject.Business
             _sqlContext = sqlContext;
         }
 
-        public async Task<User> getUserAsync(string username)
+        public async Task<User> FetchBalanceByUsername(string username)
         {
             return await _sqlContext.Users
                                      .Where(u => u.Username == username)
