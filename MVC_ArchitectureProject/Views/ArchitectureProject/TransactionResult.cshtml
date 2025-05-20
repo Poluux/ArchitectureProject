@@ -1,0 +1,37 @@
+﻿@model MVC_ArchitectureProject.Models.TransactionResultViewModel
+
+@{
+    ViewData["Title"] = "TransactionResult";
+}
+
+<h1>TransactionResult</h1>
+
+<div>
+    <h4>Transaction result</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Transaction.Username)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Transaction.Username)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Transaction.Amount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Transaction.Amount)
+        </dd>
+    </dl>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-info">
+        @Model.Message
+    </div>
+}
+
+<div>
+    <a asp-action="Index">Back to Services</a>
+</div>

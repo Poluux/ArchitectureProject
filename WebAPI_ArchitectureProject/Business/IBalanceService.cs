@@ -1,7 +1,10 @@
-﻿namespace WebAPI_ArchitectureProject.Business
+﻿using DataAccessLayer.Models;
+using WebAPI_ArchitectureProject.Model;
+
+namespace WebAPI_ArchitectureProject.Business
 {
     public interface IBalanceService
     {
-        Task<double?> getUserBalanceAsync(string username);
+        Task<User> FetchBalanceByUsername(string username);
     }
 }
