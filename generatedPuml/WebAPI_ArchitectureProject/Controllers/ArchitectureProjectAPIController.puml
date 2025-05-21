@@ -1,0 +1,13 @@
+@startuml
+class ArchitectureProjectAPIController {
+    - <<readonly>> _balanceService : IBalanceService
+    - <<readonly>> _chargingService : IChargingService
+    - <<readonly>> _quotaConversionService : IQuotaConversionService
+    + ArchitectureProjectAPIController(balanceService:IBalanceService, chargingService:IChargingService, quotaConversionService:IQuotaConversionService)
+    + <<async>> GetUserBalance(username:string) : Task<ActionResult<UserBalanceModel>>
+    + <<async>> GetNbrOfPage(amount:double) : Task<ActionResult<int>>
+    + <<async>> recordTransaction(transactionM:TransactionM) : Task<ActionResult<TransactionM>>
+    + <<async>> PatchUser(userUpdateM:UserBalanceModel) : Task<ActionResult>
+}
+ControllerBase <|-- ArchitectureProjectAPIController
+@enduml

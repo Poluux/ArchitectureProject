@@ -1,0 +1,9 @@
+@startuml
+class User {
+    + UserId : int <<get>> <<set>>
+    + Username : string <<get>> <<set>>
+    + IdCard : int <<get>> <<set>>
+    + Balance : double <<get>> <<set>>
+    + Quota : int <<get>> <<set>>
+}
+@enduml

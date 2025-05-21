@@ -1,0 +1,9 @@
+@startuml
+class BalanceServiceMVC {
+    - <<readonly>> _httpClient : HttpClient
+    - <<readonly>> _baseUrl : string = "https://localhost:7036/api/ArchitectureProjectAPI"
+    + BalanceServiceMVC(httpClient:HttpClient)
+    + <<async>> GetBalanceAsync(username:string) : Task<UserBalanceModel>
+}
+IBalanceServiceMVC <|-- BalanceServiceMVC
+@enduml

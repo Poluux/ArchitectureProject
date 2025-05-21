@@ -1,0 +1,5 @@
+@startuml
+interface IBalanceService {
+    FetchBalanceByUsername(username:string) : Task<User>
+}
+@enduml

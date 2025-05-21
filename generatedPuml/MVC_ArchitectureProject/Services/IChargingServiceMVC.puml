@@ -1,0 +1,6 @@
+@startuml
+interface IChargingServiceMVC {
+    rechargeAccount(transactionM:TransactionM) : Task<TransactionM>
+    UpdateBalanceAndQuota(userUpdate:UserBalanceModel) : Task<string>
+}
+@enduml

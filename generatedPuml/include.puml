@@ -1,0 +1,200 @@
+@startuml
+class Program {
+    {static} - Main(args:string[]) : void
+}
+class MS_SQLContext {
+    + Users : DbSet<User> <<get>> <<set>>
+    + MS_SQLContext(options:DbContextOptions<MS_SQLContext>)
+    # <<override>> OnConfiguring(optionsBuilder:DbContextOptionsBuilder) : void
+}
+DbContext <|-- MS_SQLContext
+class PaymentContext {
+    + Transactions : DbSet<Transaction> <<get>> <<set>>
+    + PaymentContext(options:DbContextOptions<PaymentContext>)
+    # <<override>> OnConfiguring(optionsBuilder:DbContextOptionsBuilder) : void
+}
+DbContext <|-- PaymentContext
+class Program {
+    + {static} Main(args:string[]) : void
+}
+class Program {
+    + {static} Main(args:string[]) : void
+}
+class InitialCreate <<partial>> {
+    # <<override>> Up(migrationBuilder:MigrationBuilder) : void
+    # <<override>> Down(migrationBuilder:MigrationBuilder) : void
+}
+Migration <|-- InitialCreate
+class InitialCreate <<partial>> {
+    # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
+}
+class InitialCreatee <<partial>> {
+    # <<override>> Up(migrationBuilder:MigrationBuilder) : void
+    # <<override>> Down(migrationBuilder:MigrationBuilder) : void
+}
+Migration <|-- InitialCreatee
+class InitialCreatee <<partial>> {
+    # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
+}
+class InitAccounts <<partial>> {
+    # <<override>> Up(migrationBuilder:MigrationBuilder) : void
+    # <<override>> Down(migrationBuilder:MigrationBuilder) : void
+}
+Migration <|-- InitAccounts
+class InitAccounts <<partial>> {
+    # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
+}
+class IdForCard <<partial>> {
+    # <<override>> Up(migrationBuilder:MigrationBuilder) : void
+    # <<override>> Down(migrationBuilder:MigrationBuilder) : void
+}
+Migration <|-- IdForCard
+class IdForCard <<partial>> {
+    # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
+}
+class MS_SQLContextModelSnapshot <<partial>> {
+    # <<override>> BuildModel(modelBuilder:ModelBuilder) : void
+}
+ModelSnapshot <|-- MS_SQLContextModelSnapshot
+class Transaction {
+    + Id : int <<get>> <<set>>
+    + Username : string <<get>> <<set>>
+    + Amount : double <<get>> <<set>>
+    + Date : DateTime <<get>> <<set>>
+}
+class User {
+    + UserId : int <<get>> <<set>>
+    + Username : string <<get>> <<set>>
+    + IdCard : int <<get>> <<set>>
+    + Balance : double <<get>> <<set>>
+    + Quota : int <<get>> <<set>>
+}
+class ArchitectureProjectController {
+    - _balanceServiceMVC : IBalanceServiceMVC
+    - _chargingServiceMVC : IChargingServiceMVC
+    - _quotaConversionServiceMVC : IQuotaConversionServiceMVC
+    + ArchitectureProjectController(balanceServiceMVC:IBalanceServiceMVC, chargingServiceMVC:IChargingServiceMVC, quotaConversionServiceMVC:IQuotaConversionServiceMVC)
+    + <<async>> Index() : Task<IActionResult>
+    + <<async>> ViewBalance() : Task<IActionResult>
+    + <<async>> ViewBalance(username:string) : Task<IActionResult>
+    + <<async>> SchoolToStudent() : Task<IActionResult>
+    + <<async>> SchoolToStudent(transactionM:TransactionM) : Task<IActionResult>
+}
+Controller <|-- ArchitectureProjectController
+class ErrorViewModel {
+    + RequestId : string? <<get>> <<set>>
+    + ShowRequestId : bool <<get>>
+}
+class TransactionM {
+    + Username : string <<get>> <<set>>
+    + Amount : double <<get>> <<set>>
+}
+class TransactionResultViewModel {
+    + Transaction : TransactionM <<get>> <<set>>
+    + Message : string <<get>> <<set>>
+}
+class UserBalanceModel {
+    + Username : string <<get>> <<set>>
+    + Balance : double <<get>> <<set>>
+    + Quota : int <<get>> <<set>>
+}
+class BalanceServiceMVC {
+    - <<readonly>> _httpClient : HttpClient
+    - <<readonly>> _baseUrl : string = "https://localhost:7036/api/ArchitectureProjectAPI"
+    + BalanceServiceMVC(httpClient:HttpClient)
+    + <<async>> GetBalanceAsync(username:string) : Task<UserBalanceModel>
+}
+IBalanceServiceMVC <|-- BalanceServiceMVC
+class ChargingServiceMVC {
+    - <<readonly>> _httpClient : HttpClient
+    - <<readonly>> _baseUrl : string = "https://localhost:7036/api/ArchitectureProjectAPI"
+    + ChargingServiceMVC(httpClient:HttpClient)
+    + <<async>> rechargeAccount(transactionM:TransactionM) : Task<TransactionM>
+    + <<async>> UpdateBalanceAndQuota(userUpdate:UserBalanceModel) : Task<string>
+}
+IChargingServiceMVC <|-- ChargingServiceMVC
+interface IBalanceServiceMVC {
+    GetBalanceAsync(username:string) : Task<UserBalanceModel>
+}
+interface IChargingServiceMVC {
+    rechargeAccount(transactionM:TransactionM) : Task<TransactionM>
+    UpdateBalanceAndQuota(userUpdate:UserBalanceModel) : Task<string>
+}
+interface IQuotaConversionServiceMVC {
+    convertCHFtoPage(amount:double) : Task<int>
+}
+class QuotaConversionServiceMVC {
+    - <<readonly>> _httpClient : HttpClient
+    - <<readonly>> _baseUrl : string = "https://localhost:7036/api/ArchitectureProjectAPI"
+    + QuotaConversionServiceMVC(httpClient:HttpClient)
+    + <<async>> convertCHFtoPage(amount:double) : Task<int>
+}
+IQuotaConversionServiceMVC <|-- QuotaConversionServiceMVC
+class BalanceService {
+    - <<readonly>> _sqlContext : MS_SQLContext
+    + BalanceService(sqlContext:MS_SQLContext)
+    + <<async>> FetchBalanceByUsername(username:string) : Task<User>
+}
+IBalanceService <|-- BalanceService
+class ChargingService {
+    - <<readonly>> _paymentContext : PaymentContext
+    - <<readonly>> _sqlContext : MS_SQLContext
+    + ChargingService(paymentContext:PaymentContext, sqlContext:MS_SQLContext)
+    + <<async>> PostTransaction(transaction:Transaction) : Task<Transaction>
+    + <<async>> UpdateBalanceAndQuota(userUpdate:User) : Task<string>
+}
+IChargingService <|-- ChargingService
+interface IBalanceService {
+    FetchBalanceByUsername(username:string) : Task<User>
+}
+interface IChargingService {
+    PostTransaction(transaction:Transaction) : Task<Transaction>
+    UpdateBalanceAndQuota(userUpdate:User) : Task<string>
+}
+interface IQuotaConversionService {
+    convertCHFtoPage(amount:double) : Task<int>
+}
+class QuotaConversionService {
+    - <<const>> ratioCHftoPages : int = 4
+    + <<async>> convertCHFtoPage(amount:double) : Task<int>
+}
+IQuotaConversionService <|-- QuotaConversionService
+class ArchitectureProjectAPIController {
+    - <<readonly>> _balanceService : IBalanceService
+    - <<readonly>> _chargingService : IChargingService
+    - <<readonly>> _quotaConversionService : IQuotaConversionService
+    + ArchitectureProjectAPIController(balanceService:IBalanceService, chargingService:IChargingService, quotaConversionService:IQuotaConversionService)
+    + <<async>> GetUserBalance(username:string) : Task<ActionResult<UserBalanceModel>>
+    + <<async>> GetNbrOfPage(amount:double) : Task<ActionResult<int>>
+    + <<async>> recordTransaction(transactionM:TransactionM) : Task<ActionResult<TransactionM>>
+    + <<async>> PatchUser(userUpdateM:UserBalanceModel) : Task<ActionResult>
+}
+ControllerBase <|-- ArchitectureProjectAPIController
+class ConverterExtension <<static>> {
+    + {static} ToUserBalanceModel(user:DataAccessLayer.Models.User) : WebAPI_ArchitectureProject.Model.UserBalanceModel
+    + {static} toUserDAL(userBalanceModel:WebAPI_ArchitectureProject.Model.UserBalanceModel) : DataAccessLayer.Models.User
+    + {static} ToTransactionDAL(transactionM:WebAPI_ArchitectureProject.Model.TransactionM) : DataAccessLayer.Models.Transaction
+    + {static} ToTranscationM(transaction:DataAccessLayer.Models.Transaction) : WebAPI_ArchitectureProject.Model.TransactionM
+}
+class TransactionM {
+    + Username : string <<get>> <<set>>
+    + Amount : double <<get>> <<set>>
+}
+class UserBalanceModel {
+    + Username : string <<get>> <<set>>
+    + Balance : double <<get>> <<set>>
+    + Quota : int <<get>> <<set>>
+}
+class InitPayments <<partial>> {
+    # <<override>> Up(migrationBuilder:MigrationBuilder) : void
+    # <<override>> Down(migrationBuilder:MigrationBuilder) : void
+}
+Migration <|-- InitPayments
+class InitPayments <<partial>> {
+    # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
+}
+class PaymentContextModelSnapshot <<partial>> {
+    # <<override>> BuildModel(modelBuilder:ModelBuilder) : void
+}
+ModelSnapshot <|-- PaymentContextModelSnapshot
+@enduml

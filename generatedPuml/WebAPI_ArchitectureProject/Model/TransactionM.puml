@@ -1,0 +1,6 @@
+@startuml
+class TransactionM {
+    + Username : string <<get>> <<set>>
+    + Amount : double <<get>> <<set>>
+}
+@enduml

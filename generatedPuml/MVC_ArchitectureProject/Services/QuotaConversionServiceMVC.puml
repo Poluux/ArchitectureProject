@@ -1,0 +1,9 @@
+@startuml
+class QuotaConversionServiceMVC {
+    - <<readonly>> _httpClient : HttpClient
+    - <<readonly>> _baseUrl : string = "https://localhost:7036/api/ArchitectureProjectAPI"
+    + QuotaConversionServiceMVC(httpClient:HttpClient)
+    + <<async>> convertCHFtoPage(amount:double) : Task<int>
+}
+IQuotaConversionServiceMVC <|-- QuotaConversionServiceMVC
+@enduml
