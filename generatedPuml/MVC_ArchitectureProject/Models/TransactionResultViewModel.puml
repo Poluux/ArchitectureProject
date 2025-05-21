@@ -1,0 +1,6 @@
+@startuml
+class TransactionResultViewModel {
+    + Transaction : TransactionM <<get>> <<set>>
+    + Message : string <<get>> <<set>>
+}
+@enduml

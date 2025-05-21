@@ -1,0 +1,6 @@
+@startuml
+interface IChargingService {
+    PostTransaction(transaction:Transaction) : Task<Transaction>
+    UpdateBalanceAndQuota(userUpdate:User) : Task<string>
+}
+@enduml

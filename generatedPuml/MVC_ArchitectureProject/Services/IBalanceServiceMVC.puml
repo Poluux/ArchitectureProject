@@ -1,0 +1,5 @@
+@startuml
+interface IBalanceServiceMVC {
+    GetBalanceAsync(username:string) : Task<UserBalanceModel>
+}
+@enduml

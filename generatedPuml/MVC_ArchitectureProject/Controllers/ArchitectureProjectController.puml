@@ -1,0 +1,14 @@
+@startuml
+class ArchitectureProjectController {
+    - _balanceServiceMVC : IBalanceServiceMVC
+    - _chargingServiceMVC : IChargingServiceMVC
+    - _quotaConversionServiceMVC : IQuotaConversionServiceMVC
+    + ArchitectureProjectController(balanceServiceMVC:IBalanceServiceMVC, chargingServiceMVC:IChargingServiceMVC, quotaConversionServiceMVC:IQuotaConversionServiceMVC)
+    + <<async>> Index() : Task<IActionResult>
+    + <<async>> ViewBalance() : Task<IActionResult>
+    + <<async>> ViewBalance(username:string) : Task<IActionResult>
+    + <<async>> SchoolToStudent() : Task<IActionResult>
+    + <<async>> SchoolToStudent(transactionM:TransactionM) : Task<IActionResult>
+}
+Controller <|-- ArchitectureProjectController
+@enduml

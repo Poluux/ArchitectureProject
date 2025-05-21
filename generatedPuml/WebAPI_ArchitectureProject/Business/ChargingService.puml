@@ -1,0 +1,10 @@
+@startuml
+class ChargingService {
+    - <<readonly>> _paymentContext : PaymentContext
+    - <<readonly>> _sqlContext : MS_SQLContext
+    + ChargingService(paymentContext:PaymentContext, sqlContext:MS_SQLContext)
+    + <<async>> PostTransaction(transaction:Transaction) : Task<Transaction>
+    + <<async>> UpdateBalanceAndQuota(userUpdate:User) : Task<string>
+}
+IChargingService <|-- ChargingService
+@enduml

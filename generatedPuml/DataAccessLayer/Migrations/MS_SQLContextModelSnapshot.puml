@@ -1,0 +1,6 @@
+@startuml
+class MS_SQLContextModelSnapshot <<partial>> {
+    # <<override>> BuildModel(modelBuilder:ModelBuilder) : void
+}
+ModelSnapshot <|-- MS_SQLContextModelSnapshot
+@enduml
