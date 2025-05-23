@@ -1,8 +1,8 @@
 ﻿namespace MVC_ArchitectureProject.Models
 {
-    public class TransactionM
+    public class CardRechargeModel
     {
-        public required string Username { get; set; }
+        public int CardId { get; set; }
         public double Amount { get; set; }
     }
 }

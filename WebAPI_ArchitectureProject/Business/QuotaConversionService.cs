@@ -6,7 +6,7 @@ namespace WebAPI_ArchitectureProject.Business
         private const int ratioCHftoPages = 4; // 1 CHF = 4 pages
         public async Task<int> convertCHFtoPage(double amount)
         {
-            return (int)(amount * ratioCHftoPages);
+            return await Task.FromResult((int)(amount * ratioCHftoPages));
         }
     }
 }

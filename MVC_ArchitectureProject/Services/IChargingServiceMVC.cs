@@ -6,5 +6,6 @@ namespace MVC_ArchitectureProject.Services
     {
         Task<TransactionM> rechargeAccount(TransactionM transactionM);
         Task<string> UpdateBalanceAndQuota(UserBalanceModel userUpdate);
+        Task<string> RechargeByCard(CardRechargeModel model);
     }
 }

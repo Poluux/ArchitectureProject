@@ -16,13 +16,13 @@ namespace MVC_ArchitectureProject.Controllers
             _quotaConversionServiceMVC = quotaConversionServiceMVC;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewBalance()
+        public IActionResult ViewBalance()
         {
             return View();
         }
@@ -35,7 +35,7 @@ namespace MVC_ArchitectureProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SchoolToStudent()
+        public IActionResult SchoolToStudent()
         {
             return View();
         }
@@ -62,5 +62,20 @@ namespace MVC_ArchitectureProject.Controllers
 
             return View("TransactionResult", viewModel);
         }
+
+        [HttpGet]
+        public IActionResult RechargeByCard()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RechargeByCard(CardRechargeModel model)
+        {
+            var message = await _chargingServiceMVC.RechargeByCard(model);
+            ViewBag.Message = message;
+            return View();
+        }
+
     }
 }

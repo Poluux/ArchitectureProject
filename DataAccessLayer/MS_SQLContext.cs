@@ -19,7 +19,7 @@ namespace DataAccessLayer
                 optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=MS-SQL_Accounts")
                             .UseSeeding((context, _) =>
                             {
-                                var user1 = new User() { Username = "John", Balance = 20, Quota = 15, IdCard = 555 };
+                                var user1 = new User() { Username = "John", Balance = 20, Quota = 15, IdCard = 555, Transactions = new List<Transaction>() };
                                 var userJohn = context.Set<User>().FirstOrDefault(u => u.Username == user1.Username);
                                 if (userJohn == null)
                                 {
@@ -27,7 +27,7 @@ namespace DataAccessLayer
                                     context.SaveChanges();
                                 }
 
-                                var user2 = new User() { Username = "Anna", Balance = 10, Quota = 8, IdCard = 666 };
+                                var user2 = new User() { Username = "Anna", Balance = 10, Quota = 8, IdCard = 666 , Transactions = new List<Transaction>() };
                                 var userAnna = context.Set<User>().FirstOrDefault(u => u.Username == user2.Username);
                                 if (userAnna == null)
                                 {
@@ -37,7 +37,7 @@ namespace DataAccessLayer
                             })
                             .UseAsyncSeeding(async (context, _, cancellationToken) =>
                             {
-                                var user1 = new User() { Username = "John", Balance = 20, Quota = 15, IdCard = 555 };
+                                var user1 = new User() { Username = "John", Balance = 20, Quota = 15, IdCard = 555, Transactions = new List<Transaction>() };
                                 var userJohn = await context.Set<User>().FirstOrDefaultAsync(u => u.Username == user1.Username);
                                 if (userJohn == null)
                                 {
@@ -45,7 +45,7 @@ namespace DataAccessLayer
                                     await context.SaveChangesAsync(cancellationToken);
                                 }
 
-                                var user2 = new User() { Username = "Anna", Balance = 10, Quota = 8, IdCard = 666 };
+                                var user2 = new User() { Username = "Anna", Balance = 10, Quota = 8, IdCard = 666, Transactions = new List<Transaction>() };
                                 var userAnna = await context.Set<User>().FirstOrDefaultAsync(u => u.Username == user2.Username);
                                 if (userAnna == null)
                                 {
@@ -56,6 +56,23 @@ namespace DataAccessLayer
             }
 
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasKey(u => u.UserId);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Transactions)
+                .WithOne()
+                .HasForeignKey("UserId")
+                .OnDelete(DeleteBehavior.Cascade);
+        }
+
 
     }
 }

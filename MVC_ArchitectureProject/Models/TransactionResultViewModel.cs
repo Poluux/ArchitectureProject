@@ -2,7 +2,7 @@
 {
     public class TransactionResultViewModel
     {
-        public TransactionM Transaction { get; set; }
-        public string Message { get; set; }
+        public required TransactionM Transaction { get; set; }
+        public required string Message { get; set; }
     }
 }

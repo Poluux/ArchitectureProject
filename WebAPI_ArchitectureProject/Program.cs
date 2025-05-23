@@ -36,8 +36,8 @@ namespace WebAPI_ArchitectureProject
 
             static void SeedDatabase(MS_SQLContext context)
             {
-                var user1 = new User { Username = "John", Balance = 20, Quota = 15, IdCard = 555 };
-                var user2 = new User { Username = "Anna", Balance = 10, Quota = 8, IdCard = 666 };
+                var user1 = new User { Username = "John", Balance = 20, Quota = 15, IdCard = 555, Transactions = new List<Transaction>() };
+                var user2 = new User { Username = "Anna", Balance = 10, Quota = 8, IdCard = 666, Transactions = new List<Transaction>() };
 
                 if (!context.Users.Any(u => u.Username == user1.Username))
                     context.Users.Add(user1);

@@ -17,7 +17,12 @@ namespace MVC_ArchitectureProject.Services
             var response = await _httpClient.PostAsJsonAsync(_baseUrl + "/SchoolToStudent/", transactionM);
             response.EnsureSuccessStatusCode();
             var transactionReturned = await response.Content.ReadFromJsonAsync<TransactionM>();
+            if (transactionReturned == null)
+            {
+                throw new Exception("Failed to deserialize TransactionM from the API response.");
+            }
             return transactionReturned;
+
         }
 
         public async Task<string> UpdateBalanceAndQuota(UserBalanceModel userUpdate)
@@ -33,5 +38,13 @@ namespace MVC_ArchitectureProject.Services
                 return $"Error: {errorMessage}";
             }
         }
+
+        public async Task<string> RechargeByCard(CardRechargeModel model)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/ArchitectureProjectAPI/rechargeByCard", model);
+            return await response.Content.ReadAsStringAsync();
+        }
+
+
     }
 }

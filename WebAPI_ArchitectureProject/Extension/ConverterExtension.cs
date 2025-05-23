@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using DataAccessLayer.Models;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using WebAPI_ArchitectureProject.Business;
 
@@ -23,6 +24,8 @@ namespace WebAPI_ArchitectureProject.Extension
                 Username = userBalanceModel.Username,
                 Balance = userBalanceModel.Balance,
                 Quota = userBalanceModel.Quota,
+                Transactions = new List<Transaction>()
+
             };
         }
 
@@ -32,7 +35,15 @@ namespace WebAPI_ArchitectureProject.Extension
             {
                 Username = transactionM.Username,
                 Amount = transactionM.Amount,
-                Date = DateTime.Now,
+                Date = DateTime.Now
+                /*User = new User
+                {
+                    Username = transactionM.Username,
+                    Balance = 0,
+                    Quota = 0,
+                    IdCard = 0,
+                    Transactions = new List<Transaction>()
+                }*/
             };
         }
 

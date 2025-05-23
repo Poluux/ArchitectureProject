@@ -23,6 +23,10 @@ namespace MVC_ArchitectureProject.Services
                 PropertyNameCaseInsensitive = true,
             };
             var userBalanceModel = JsonSerializer.Deserialize<UserBalanceModel>(responseBody, options);
+            if (userBalanceModel == null)
+            {
+                throw new Exception("Failed to deserialize user balance model.");
+            }
             return userBalanceModel;
         }
     }

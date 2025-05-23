@@ -63,5 +63,41 @@ namespace WebAPI_ArchitectureProject.Controllers
                 return BadRequest(result);
             }
         }
+
+        [HttpPost("rechargeAccountByCard")]
+        public async Task<ActionResult<string>> RechargeAccountByCard(CardRechargeModel model)
+        {
+            var username = await _chargingService.GetUsernameByCardId(model.CardId);
+            if (username == null) return NotFound("Card not linked.");
+
+            var transaction = new TransactionM
+            {
+                Username = username,
+                Amount = model.Amount
+            };
+
+            await _chargingService.PostTransaction(transaction.ToTransactionDAL());
+            var pages = await _quotaConversionService.convertCHFtoPage(model.Amount);
+
+            var userUpdate = new UserBalanceModel
+            {
+                Username = username,
+                Balance = model.Amount,
+                Quota = pages
+            };
+
+            await _chargingService.UpdateBalanceAndQuota(userUpdate.toUserDAL());
+
+            return Ok("Recharge completed successfully.");
+        }
+
+        [HttpPost("RechargeByCard")]
+        public async Task<IActionResult> RechargeByCard(CardRechargeModel model)
+        {
+            var result = await _chargingService.RechargeByCard(model);
+            return Ok(new { message = result });
+        }
+
+
     }
 }

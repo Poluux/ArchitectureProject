@@ -21,7 +21,16 @@ namespace WebAPI_ArchitectureProject.Business
             return await _sqlContext.Users
                                      .Where(u => u.Username == username)
                                      .Select(u => u)
-                                     .FirstOrDefaultAsync();
+                                     .FirstOrDefaultAsync()
+                                     ?? throw new Exception("User not found");
         }
+
+        public async Task<User> GetUsernameByCardId(int cardId)
+        {
+            var user = await _sqlContext.Users.FirstOrDefaultAsync(u => u.IdCard == cardId);
+            if (user == null) throw new Exception("Card not linked to any user.");
+            return user;
+        }
+
     }
 }
