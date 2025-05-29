@@ -3,8 +3,10 @@ class ChargingServiceMVC {
     - <<readonly>> _httpClient : HttpClient
     - <<readonly>> _baseUrl : string = "https://localhost:7036/api/ArchitectureProjectAPI"
     + ChargingServiceMVC(httpClient:HttpClient)
-    + <<async>> rechargeAccount(transactionM:TransactionM) : Task<TransactionM>
+    + <<async>> rechargeAccount(listTransactionM:List<TransactionM>) : Task<List<TransactionM>>
     + <<async>> UpdateBalanceAndQuota(userUpdate:UserBalanceModel) : Task<string>
+    + <<async>> RechargeByCard(model:CardRechargeModel) : Task<string>
+    + <<async>> GetAllUserBalance() : Task<List<UserBalanceModel>>
 }
 IChargingServiceMVC <|-- ChargingServiceMVC
 @enduml

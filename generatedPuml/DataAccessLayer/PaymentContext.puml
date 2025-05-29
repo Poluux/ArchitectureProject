@@ -3,6 +3,7 @@ class PaymentContext {
     + Transactions : DbSet<Transaction> <<get>> <<set>>
     + PaymentContext(options:DbContextOptions<PaymentContext>)
     # <<override>> OnConfiguring(optionsBuilder:DbContextOptionsBuilder) : void
+    # <<override>> OnModelCreating(modelBuilder:ModelBuilder) : void
 }
 DbContext <|-- PaymentContext
 @enduml

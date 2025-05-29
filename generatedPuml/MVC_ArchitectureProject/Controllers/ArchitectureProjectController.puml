@@ -4,11 +4,13 @@ class ArchitectureProjectController {
     - _chargingServiceMVC : IChargingServiceMVC
     - _quotaConversionServiceMVC : IQuotaConversionServiceMVC
     + ArchitectureProjectController(balanceServiceMVC:IBalanceServiceMVC, chargingServiceMVC:IChargingServiceMVC, quotaConversionServiceMVC:IQuotaConversionServiceMVC)
-    + <<async>> Index() : Task<IActionResult>
-    + <<async>> ViewBalance() : Task<IActionResult>
+    + Index() : IActionResult
+    + ViewBalance() : IActionResult
     + <<async>> ViewBalance(username:string) : Task<IActionResult>
-    + <<async>> SchoolToStudent() : Task<IActionResult>
-    + <<async>> SchoolToStudent(transactionM:TransactionM) : Task<IActionResult>
+    + <<async>> SchoolToStudentList() : Task<IActionResult>
+    + <<async>> SchoolToStudent(selectedUsernames:List<string>, amount:double) : Task<IActionResult>
+    + RechargeByCard() : IActionResult
+    + <<async>> RechargeByCard(model:CardRechargeModel) : Task<IActionResult>
 }
 Controller <|-- ArchitectureProjectController
 @enduml

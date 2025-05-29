@@ -6,12 +6,14 @@ class MS_SQLContext {
     + Users : DbSet<User> <<get>> <<set>>
     + MS_SQLContext(options:DbContextOptions<MS_SQLContext>)
     # <<override>> OnConfiguring(optionsBuilder:DbContextOptionsBuilder) : void
+    # <<override>> OnModelCreating(modelBuilder:ModelBuilder) : void
 }
 DbContext <|-- MS_SQLContext
 class PaymentContext {
     + Transactions : DbSet<Transaction> <<get>> <<set>>
     + PaymentContext(options:DbContextOptions<PaymentContext>)
     # <<override>> OnConfiguring(optionsBuilder:DbContextOptionsBuilder) : void
+    # <<override>> OnModelCreating(modelBuilder:ModelBuilder) : void
 }
 DbContext <|-- PaymentContext
 class Program {
@@ -52,49 +54,72 @@ Migration <|-- IdForCard
 class IdForCard <<partial>> {
     # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
 }
+class AddIdCardToUser <<partial>> {
+    # <<override>> Up(migrationBuilder:MigrationBuilder) : void
+    # <<override>> Down(migrationBuilder:MigrationBuilder) : void
+}
+Migration <|-- AddIdCardToUser
+class AddIdCardToUser <<partial>> {
+    # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
+}
+class RemoveUserToTransactions <<partial>> {
+    # <<override>> Up(migrationBuilder:MigrationBuilder) : void
+    # <<override>> Down(migrationBuilder:MigrationBuilder) : void
+}
+Migration <|-- RemoveUserToTransactions
+class RemoveUserToTransactions <<partial>> {
+    # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
+}
 class MS_SQLContextModelSnapshot <<partial>> {
     # <<override>> BuildModel(modelBuilder:ModelBuilder) : void
 }
 ModelSnapshot <|-- MS_SQLContextModelSnapshot
 class Transaction {
     + Id : int <<get>> <<set>>
-    + Username : string <<get>> <<set>>
+    + <<required>> Username : string <<get>> <<set>>
     + Amount : double <<get>> <<set>>
     + Date : DateTime <<get>> <<set>>
 }
 class User {
     + UserId : int <<get>> <<set>>
-    + Username : string <<get>> <<set>>
+    + <<required>> Username : string <<get>> <<set>>
     + IdCard : int <<get>> <<set>>
     + Balance : double <<get>> <<set>>
     + Quota : int <<get>> <<set>>
+    + Transactions : ICollection<Transaction> <<get>> <<set>>
 }
 class ArchitectureProjectController {
     - _balanceServiceMVC : IBalanceServiceMVC
     - _chargingServiceMVC : IChargingServiceMVC
     - _quotaConversionServiceMVC : IQuotaConversionServiceMVC
     + ArchitectureProjectController(balanceServiceMVC:IBalanceServiceMVC, chargingServiceMVC:IChargingServiceMVC, quotaConversionServiceMVC:IQuotaConversionServiceMVC)
-    + <<async>> Index() : Task<IActionResult>
-    + <<async>> ViewBalance() : Task<IActionResult>
+    + Index() : IActionResult
+    + ViewBalance() : IActionResult
     + <<async>> ViewBalance(username:string) : Task<IActionResult>
-    + <<async>> SchoolToStudent() : Task<IActionResult>
-    + <<async>> SchoolToStudent(transactionM:TransactionM) : Task<IActionResult>
+    + <<async>> SchoolToStudentList() : Task<IActionResult>
+    + <<async>> SchoolToStudent(selectedUsernames:List<string>, amount:double) : Task<IActionResult>
+    + RechargeByCard() : IActionResult
+    + <<async>> RechargeByCard(model:CardRechargeModel) : Task<IActionResult>
 }
 Controller <|-- ArchitectureProjectController
+class CardRechargeModel {
+    + CardId : int <<get>> <<set>>
+    + Amount : double <<get>> <<set>>
+}
 class ErrorViewModel {
     + RequestId : string? <<get>> <<set>>
     + ShowRequestId : bool <<get>>
 }
 class TransactionM {
-    + Username : string <<get>> <<set>>
+    + <<required>> Username : string <<get>> <<set>>
     + Amount : double <<get>> <<set>>
 }
 class TransactionResultViewModel {
-    + Transaction : TransactionM <<get>> <<set>>
-    + Message : string <<get>> <<set>>
+    + <<required>> Transaction : TransactionM <<get>> <<set>>
+    + <<required>> Message : string <<get>> <<set>>
 }
 class UserBalanceModel {
-    + Username : string <<get>> <<set>>
+    + <<required>> Username : string <<get>> <<set>>
     + Balance : double <<get>> <<set>>
     + Quota : int <<get>> <<set>>
 }
@@ -109,16 +134,20 @@ class ChargingServiceMVC {
     - <<readonly>> _httpClient : HttpClient
     - <<readonly>> _baseUrl : string = "https://localhost:7036/api/ArchitectureProjectAPI"
     + ChargingServiceMVC(httpClient:HttpClient)
-    + <<async>> rechargeAccount(transactionM:TransactionM) : Task<TransactionM>
+    + <<async>> rechargeAccount(listTransactionM:List<TransactionM>) : Task<List<TransactionM>>
     + <<async>> UpdateBalanceAndQuota(userUpdate:UserBalanceModel) : Task<string>
+    + <<async>> RechargeByCard(model:CardRechargeModel) : Task<string>
+    + <<async>> GetAllUserBalance() : Task<List<UserBalanceModel>>
 }
 IChargingServiceMVC <|-- ChargingServiceMVC
 interface IBalanceServiceMVC {
     GetBalanceAsync(username:string) : Task<UserBalanceModel>
 }
 interface IChargingServiceMVC {
-    rechargeAccount(transactionM:TransactionM) : Task<TransactionM>
+    rechargeAccount(listTransactionM:List<TransactionM>) : Task<List<TransactionM>>
     UpdateBalanceAndQuota(userUpdate:UserBalanceModel) : Task<string>
+    RechargeByCard(model:CardRechargeModel) : Task<string>
+    GetAllUserBalance() : Task<List<UserBalanceModel>>
 }
 interface IQuotaConversionServiceMVC {
     convertCHFtoPage(amount:double) : Task<int>
@@ -134,28 +163,39 @@ class BalanceService {
     - <<readonly>> _sqlContext : MS_SQLContext
     + BalanceService(sqlContext:MS_SQLContext)
     + <<async>> FetchBalanceByUsername(username:string) : Task<User>
+    + <<async>> GetUsernameByCardId(cardId:int) : Task<User>
 }
 IBalanceService <|-- BalanceService
 class ChargingService {
     - <<readonly>> _paymentContext : PaymentContext
     - <<readonly>> _sqlContext : MS_SQLContext
-    + ChargingService(paymentContext:PaymentContext, sqlContext:MS_SQLContext)
+    - <<readonly>> _quotaConversionService : IQuotaConversionService
+    + ChargingService(paymentContext:PaymentContext, sqlContext:MS_SQLContext, quotaConversionService:IQuotaConversionService)
+    + <<async>> PostTransactionList(listTransaction:List<Transaction>) : Task<List<Transaction>>
     + <<async>> PostTransaction(transaction:Transaction) : Task<Transaction>
     + <<async>> UpdateBalanceAndQuota(userUpdate:User) : Task<string>
+    + <<async>> GetUsernameByCardId(cardId:int) : Task<string?>
+    + <<async>> RechargeByCard(model:CardRechargeModel) : Task<string>
+    + <<async>> GetAllUserBalance() : Task<IEnumerable<User>>
 }
 IChargingService <|-- ChargingService
 interface IBalanceService {
     FetchBalanceByUsername(username:string) : Task<User>
+    GetUsernameByCardId(cardId:int) : Task<User>
 }
 interface IChargingService {
+    PostTransactionList(listTransaction:List<Transaction>) : Task<List<Transaction>>
     PostTransaction(transaction:Transaction) : Task<Transaction>
     UpdateBalanceAndQuota(userUpdate:User) : Task<string>
+    GetUsernameByCardId(cardId:int) : Task<string?>
+    RechargeByCard(model:CardRechargeModel) : Task<string>
+    GetAllUserBalance() : Task<IEnumerable<User>>
 }
 interface IQuotaConversionService {
     convertCHFtoPage(amount:double) : Task<int>
 }
 class QuotaConversionService {
-    - <<const>> ratioCHftoPages : int = 4
+    - <<const>> ratioCHftoPages : double = 0.08
     + <<async>> convertCHFtoPage(amount:double) : Task<int>
 }
 IQuotaConversionService <|-- QuotaConversionService
@@ -165,9 +205,12 @@ class ArchitectureProjectAPIController {
     - <<readonly>> _quotaConversionService : IQuotaConversionService
     + ArchitectureProjectAPIController(balanceService:IBalanceService, chargingService:IChargingService, quotaConversionService:IQuotaConversionService)
     + <<async>> GetUserBalance(username:string) : Task<ActionResult<UserBalanceModel>>
+    + <<async>> GetAllUserBalance() : Task<ActionResult<IEnumerable<UserBalanceModel>>>
     + <<async>> GetNbrOfPage(amount:double) : Task<ActionResult<int>>
-    + <<async>> recordTransaction(transactionM:TransactionM) : Task<ActionResult<TransactionM>>
+    + <<async>> recordTransaction(listTransactionM:List<TransactionM>) : Task<ActionResult<List<TransactionM>>>
     + <<async>> PatchUser(userUpdateM:UserBalanceModel) : Task<ActionResult>
+    + <<async>> RechargeAccountByCard(model:CardRechargeModel) : Task<ActionResult<string>>
+    + <<async>> RechargeByCard(model:CardRechargeModel) : Task<IActionResult>
 }
 ControllerBase <|-- ArchitectureProjectAPIController
 class ConverterExtension <<static>> {
@@ -176,8 +219,12 @@ class ConverterExtension <<static>> {
     + {static} ToTransactionDAL(transactionM:WebAPI_ArchitectureProject.Model.TransactionM) : DataAccessLayer.Models.Transaction
     + {static} ToTranscationM(transaction:DataAccessLayer.Models.Transaction) : WebAPI_ArchitectureProject.Model.TransactionM
 }
+class CardRechargeModel {
+    + CardId : int <<get>> <<set>>
+    + Amount : double <<get>> <<set>>
+}
 class TransactionM {
-    + Username : string <<get>> <<set>>
+    + <<required>> Username : string <<get>> <<set>>
     + Amount : double <<get>> <<set>>
 }
 class UserBalanceModel {
@@ -191,6 +238,22 @@ class InitPayments <<partial>> {
 }
 Migration <|-- InitPayments
 class InitPayments <<partial>> {
+    # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
+}
+class UpdatePaymentSchema <<partial>> {
+    # <<override>> Up(migrationBuilder:MigrationBuilder) : void
+    # <<override>> Down(migrationBuilder:MigrationBuilder) : void
+}
+Migration <|-- UpdatePaymentSchema
+class UpdatePaymentSchema <<partial>> {
+    # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
+}
+class RemoveUserFKFromTransactions <<partial>> {
+    # <<override>> Up(migrationBuilder:MigrationBuilder) : void
+    # <<override>> Down(migrationBuilder:MigrationBuilder) : void
+}
+Migration <|-- RemoveUserFKFromTransactions
+class RemoveUserFKFromTransactions <<partial>> {
     # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
 }
 class PaymentContextModelSnapshot <<partial>> {

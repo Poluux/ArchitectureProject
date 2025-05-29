@@ -1,0 +1,6 @@
+@startuml
+class CardRechargeModel {
+    + CardId : int <<get>> <<set>>
+    + Amount : double <<get>> <<set>>
+}
+@enduml

@@ -1,0 +1,5 @@
+@startuml
+class UpdatePaymentSchema <<partial>> {
+    # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
+}
+@enduml
