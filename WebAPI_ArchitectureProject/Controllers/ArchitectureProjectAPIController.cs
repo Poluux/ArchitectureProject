@@ -35,6 +35,27 @@ namespace WebAPI_ArchitectureProject.Controllers
             return Ok(userBalanceModel);
         }
 
+        [HttpGet("Users/")]
+        public async Task<ActionResult<IEnumerable<UserBalanceModel>>> GetAllUserBalance()
+        {
+            var students = await _chargingService.GetAllUserBalance();
+
+            if (students == null)
+            {
+                return NotFound();
+            }
+
+            var listOfStudentsM = new List<UserBalanceModel>();
+            foreach (var student in students)
+            {
+                UserBalanceModel studentM = new UserBalanceModel();
+                studentM = student.ToUserBalanceModel();
+                listOfStudentsM.Add(studentM);
+            }
+           
+            return Ok(listOfStudentsM);
+        }
+
         [HttpGet("convertCHFToPage/{amount}")]
         public async Task<ActionResult<int>> GetNbrOfPage(double amount)
         {
@@ -43,11 +64,24 @@ namespace WebAPI_ArchitectureProject.Controllers
         }
 
         [HttpPost("SchoolToStudent/")]
-        public async Task<ActionResult<TransactionM>> recordTransaction(TransactionM transactionM)
+        public async Task<ActionResult<List<TransactionM>>> recordTransaction(List<TransactionM> listTransactionM)
         {
-            var transaction = transactionM.ToTransactionDAL();
-            var transactionReturned = await _chargingService.PostTransaction(transaction);
-            return (transactionReturned.ToTranscationM());
+            if (listTransactionM == null || !listTransactionM.Any())
+            {
+                return BadRequest("La liste des transactions est vide.");
+            }
+
+            var dalTransactions = listTransactionM
+                .Select(t => t.ToTransactionDAL())
+                .ToList();
+
+            var listTransactionReturned = await _chargingService.PostTransactionList(dalTransactions);
+
+            var result = listTransactionReturned
+                .Select(t => t.ToTranscationM())
+                .ToList();
+
+            return (result);
         }
 
         [HttpPatch("updateBalanceAndQuota/")]

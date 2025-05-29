@@ -19,9 +19,16 @@ namespace WebAPI_ArchitectureProject.Business
             _quotaConversionService = quotaConversionService;
         }
 
+        public async Task<List<Transaction>> PostTransactionList(List<Transaction> listTransaction)
+        {
+            _paymentContext.Transactions.AddRange(listTransaction);
+            await _paymentContext.SaveChangesAsync();
+            return listTransaction;
+        }
+
         public async Task<Transaction> PostTransaction(Transaction transaction)
         {
-            _paymentContext.Transactions.Add(transaction);
+            _paymentContext.Transactions.AddRange(transaction);
             await _paymentContext.SaveChangesAsync();
             return transaction;
         }
@@ -82,7 +89,10 @@ namespace WebAPI_ArchitectureProject.Business
             return "Recharge completed successfully";
         }
 
-
+        public async Task<IEnumerable<User>> GetAllUserBalance()
+        {
+            return await _sqlContext.Users.ToListAsync();
+        }
 
     }
 }
