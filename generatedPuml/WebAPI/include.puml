@@ -1,0 +1,117 @@
+@startuml
+top to bottom direction
+hide empty members
+
+' ===== INTERFACES =====
+package "Interfaces" {
+    interface IBalanceService {
+        FetchBalanceByUsername(username:string) : Task<User>
+        GetUsernameByCardId(cardId:int) : Task<User>
+    }
+
+    interface IChargingService {
+        PostTransactionList(listTransaction:List<Transaction>) : Task<List<Transaction>>
+        PostTransaction(transaction:Transaction) : Task<Transaction>
+        UpdateBalanceAndQuota(userUpdate:User) : Task<string>
+        GetUsernameByCardId(cardId:int) : Task<string?>
+        RechargeByCard(model:CardRechargeModel) : Task<string>
+        GetAllUserBalance() : Task<IEnumerable<User>>
+    }
+
+    interface IQuotaConversionService {
+        convertCHFtoPage(amount:double) : Task<int>
+    }
+}
+
+' ===== SERVICES =====
+package "Services" {
+    class BalanceService {
+        - <<readonly>> _sqlContext : MS_SQLContext
+        + BalanceService(sqlContext:MS_SQLContext)
+        + <<async>> FetchBalanceByUsername(username:string) : Task<User>
+        + <<async>> GetUsernameByCardId(cardId:int) : Task<User>
+    }
+
+    class ChargingService {
+        - <<readonly>> _paymentContext : PaymentContext
+        - <<readonly>> _sqlContext : MS_SQLContext
+        - <<readonly>> _quotaConversionService : IQuotaConversionService
+        + ChargingService(paymentContext:PaymentContext, sqlContext:MS_SQLContext, quotaConversionService:IQuotaConversionService)
+        + <<async>> PostTransactionList(listTransaction:List<Transaction>) : Task<List<Transaction>>
+        + <<async>> PostTransaction(transaction:Transaction) : Task<Transaction>
+        + <<async>> UpdateBalanceAndQuota(userUpdate:User) : Task<string>
+        + <<async>> GetUsernameByCardId(cardId:int) : Task<string?>
+        + <<async>> RechargeByCard(model:CardRechargeModel) : Task<string>
+        + <<async>> GetAllUserBalance() : Task<IEnumerable<User>>
+    }
+
+    class QuotaConversionService {
+        - <<const>> ratioCHftoPages : double = 0.08
+        + <<async>> convertCHFtoPage(amount:double) : Task<int>
+    }
+}
+
+' ===== CONTROLLER =====
+package "Controller" {
+    class ArchitectureProjectAPIController {
+        - <<readonly>> _balanceService : IBalanceService
+        - <<readonly>> _chargingService : IChargingService
+        - <<readonly>> _quotaConversionService : IQuotaConversionService
+        + ArchitectureProjectAPIController(balanceService:IBalanceService, chargingService:IChargingService, quotaConversionService:IQuotaConversionService)
+        + <<async>> GetUserBalance(username:string) : Task<ActionResult<UserBalanceModel>>
+        + <<async>> GetAllUserBalance() : Task<ActionResult<IEnumerable<UserBalanceModel>>>
+        + <<async>> GetNbrOfPage(amount:double) : Task<ActionResult<int>>
+        + <<async>> recordTransaction(listTransactionM:List<TransactionM>) : Task<ActionResult<List<TransactionM>>>
+        + <<async>> PatchUser(userUpdateM:UserBalanceModel) : Task<ActionResult>
+        + <<async>> RechargeAccountByCard(model:CardRechargeModel) : Task<ActionResult<string>>
+        + <<async>> RechargeByCard(model:CardRechargeModel) : Task<IActionResult>
+    }
+
+    ControllerBase <|--down-- ArchitectureProjectAPIController
+}
+
+' ===== MODELS =====
+package "Models" {
+    class CardRechargeModel {
+        + CardId : int <<get>> <<set>>
+        + Amount : double <<get>> <<set>>
+    }
+
+    class TransactionM {
+        + <<required>> Username : string <<get>> <<set>>
+        + Amount : double <<get>> <<set>>
+    }
+
+    class UserBalanceModel {
+        + Username : string <<get>> <<set>>
+        + Balance : double <<get>> <<set>>
+        + Quota : int <<get>> <<set>>
+    }
+}
+
+' ===== EXTENSIONS =====
+package "Extensions" {
+    class ConverterExtension <<static>> {
+        + {static} ToUserBalanceModel(user:DataAccessLayer.Models.User) : WebAPI_ArchitectureProject.Model.UserBalanceModel
+        + {static} toUserDAL(userBalanceModel:WebAPI_ArchitectureProject.Model.UserBalanceModel) : DataAccessLayer.Models.User
+        + {static} ToTransactionDAL(transactionM:WebAPI_ArchitectureProject.Model.TransactionM) : DataAccessLayer.Models.Transaction
+        + {static} ToTranscationM(transaction:DataAccessLayer.Models.Transaction) : WebAPI_ArchitectureProject.Model.TransactionM
+    }
+}
+
+' ===== PROGRAM =====
+package "Entry Point" {
+    class Program {
+        + {static} Main(args:string[]) : void
+    }
+}
+
+' ===== RELATIONS =====
+IBalanceService <|--down-- BalanceService
+IChargingService <|--down-- ChargingService
+IQuotaConversionService <|--down-- QuotaConversionService
+
+ArchitectureProjectAPIController -down-> IBalanceService
+ArchitectureProjectAPIController -down-> IChargingService
+ArchitectureProjectAPIController -down-> IQuotaConversionService
+@enduml

@@ -1,6 +1,6 @@
 @startuml
 class UserBalanceModel {
-    + <<required>> Username : string <<get>> <<set>>
+    + Username : string <<get>> <<set>>
     + Balance : double <<get>> <<set>>
     + Quota : int <<get>> <<set>>
 }

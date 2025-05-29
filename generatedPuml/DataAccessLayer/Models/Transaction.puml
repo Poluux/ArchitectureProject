@@ -1,7 +1,7 @@
 @startuml
 class Transaction {
     + Id : int <<get>> <<set>>
-    + Username : string <<get>> <<set>>
+    + <<required>> Username : string <<get>> <<set>>
     + Amount : double <<get>> <<set>>
     + Date : DateTime <<get>> <<set>>
 }

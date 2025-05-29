@@ -3,6 +3,7 @@ class MS_SQLContext {
     + Users : DbSet<User> <<get>> <<set>>
     + MS_SQLContext(options:DbContextOptions<MS_SQLContext>)
     # <<override>> OnConfiguring(optionsBuilder:DbContextOptionsBuilder) : void
+    # <<override>> OnModelCreating(modelBuilder:ModelBuilder) : void
 }
 DbContext <|-- MS_SQLContext
 @enduml
