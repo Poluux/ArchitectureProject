@@ -36,14 +36,27 @@ namespace WebAPI_ArchitectureProject
 
             static void SeedDatabase(MS_SQLContext context)
             {
-                var user1 = new User { Username = "John", Balance = 20, Quota = 15, IdCard = 555, Transactions = new List<Transaction>() };
-                var user2 = new User { Username = "Anna", Balance = 10, Quota = 8, IdCard = 666, Transactions = new List<Transaction>() };
+                var usersToAdd = new List<User>
+                {
+                    new User { Username = "John", Balance = 20, Quota = 15, IdCard = 555, Transactions = new List<Transaction>() },
+                    new User { Username = "Anna", Balance = 10, Quota = 8, IdCard = 666, Transactions = new List<Transaction>() },
+                    new User { Username = "Mike", Balance = 5, Quota = 10, IdCard = 101, Transactions = new List<Transaction>() },
+                    new User { Username = "Sophie", Balance = 12, Quota = 9, IdCard = 102, Transactions = new List<Transaction>() },
+                    new User { Username = "David", Balance = 7, Quota = 6, IdCard = 103, Transactions = new List<Transaction>() },
+                    new User { Username = "Emma", Balance = 15, Quota = 20, IdCard = 104, Transactions = new List<Transaction>() },
+                    new User { Username = "Liam", Balance = 8, Quota = 5, IdCard = 105, Transactions = new List<Transaction>() },
+                    new User { Username = "Olivia", Balance = 14, Quota = 12, IdCard = 106, Transactions = new List<Transaction>() },
+                    new User { Username = "Noah", Balance = 9, Quota = 7, IdCard = 107, Transactions = new List<Transaction>() },
+                    new User { Username = "Ava", Balance = 6, Quota = 11, IdCard = 108, Transactions = new List<Transaction>() }
+                };
 
-                if (!context.Users.Any(u => u.Username == user1.Username))
-                    context.Users.Add(user1);
-
-                if (!context.Users.Any(u => u.Username == user2.Username))
-                    context.Users.Add(user2);
+                foreach (var user in usersToAdd)
+                {
+                    if (!context.Users.Any(u => u.Username == user.Username))
+                    {
+                        context.Users.Add(user);
+                    }
+                }
 
                 context.SaveChanges();
             }

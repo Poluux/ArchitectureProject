@@ -3,10 +3,13 @@
     ViewData["Title"] = "ViewBalance";
 }
 
-<h1>ViewBalance</h1>
+<h1>Balance Search:</h1>
 <form asp-action="ViewBalance" method="post">
     <label for="useranme">Student Username:</label>
     <input type="text" name="username" id="username" required/>
     <button type="submit">Search</button>
 </form>
+<div>
+    <a asp-action="Index">Back to Services</a>
+</div>
 

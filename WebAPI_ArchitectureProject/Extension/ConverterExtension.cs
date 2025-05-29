@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Models;
+using Microsoft.AspNetCore.SignalR;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using WebAPI_ArchitectureProject.Business;

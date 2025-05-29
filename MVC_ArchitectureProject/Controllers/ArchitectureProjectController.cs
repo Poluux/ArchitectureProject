@@ -35,32 +35,73 @@ namespace MVC_ArchitectureProject.Controllers
         }
 
         [HttpGet]
-        public IActionResult SchoolToStudent()
+        public async Task<IActionResult> SchoolToStudentList()
         {
-            return View();
+            var students = await _chargingServiceMVC.GetAllUserBalance();
+            return View(students);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SchoolToStudent(TransactionM transactionM)
+        public async Task<IActionResult> SchoolToStudent(List<string> selectedUsernames, double amount)
         {
-            var transaction = await _chargingServiceMVC.rechargeAccount(transactionM);
-            var nbrOfPages = await _quotaConversionServiceMVC.convertCHFtoPage(transactionM.Amount);
-
-            var updateUser = new UserBalanceModel
+            if (selectedUsernames == null || selectedUsernames.Count == 0 || amount <= 0)
             {
-                Username = transactionM.Username,
-                Balance = transactionM.Amount,
-                Quota = nbrOfPages
-            };
+                ModelState.AddModelError("", "Sélectionnez au moins un étudiant et un montant valide.");
+                var students = await _chargingServiceMVC.GetAllUserBalance();
+                return View("SchoolToStudentList", students);
+            }
 
-            string updateMessage = await _chargingServiceMVC.UpdateBalanceAndQuota(updateUser);
-            var viewModel = new TransactionResultViewModel
+            var transactions = selectedUsernames.Select(username => new TransactionM
             {
-                Transaction = transaction,
-                Message = updateMessage
-            };
+                Username = username,
+                Amount = amount
+            }).ToList();
 
-            return View("TransactionResult", viewModel);
+            var transactionResult = await _chargingServiceMVC.rechargeAccount(transactions);
+
+            var resultsViewModel = new List<TransactionResultViewModel>();
+
+            foreach (var transaction in transactionResult)
+            {
+                var pages = await _quotaConversionServiceMVC.convertCHFtoPage(transaction.Amount);
+
+                var updateUser = new UserBalanceModel
+                {
+                    Username = transaction.Username,
+                    Balance = transaction.Amount,
+                    Quota = pages
+                };
+
+                string updateMessage = await _chargingServiceMVC.UpdateBalanceAndQuota(updateUser);
+
+                var viewModel = new TransactionResultViewModel
+                {
+                    Transaction = transaction,
+                    Message = updateMessage
+                };
+
+                resultsViewModel.Add(viewModel);
+            }
+
+            return View("TransactionResult", resultsViewModel);
+            /*    var transaction = await _chargingServiceMVC.rechargeAccount(transactionM);
+                var nbrOfPages = await _quotaConversionServiceMVC.convertCHFtoPage(transactionM.Amount);
+
+                var updateUser = new UserBalanceModel
+                {
+                    Username = transactionM.Username,
+                    Balance = transactionM.Amount,
+                    Quota = nbrOfPages
+                };  
+
+                string updateMessage = await _chargingServiceMVC.UpdateBalanceAndQuota(updateUser);
+                var viewModel = new TransactionResultViewModel
+                {
+                    Transaction = transaction,
+                    Message = updateMessage
+                };
+
+                return View("TransactionResult", viewModel);    */
         }
 
         [HttpGet]

@@ -1,37 +1,28 @@
-﻿@model MVC_ArchitectureProject.Models.TransactionResultViewModel
+﻿@model List<MVC_ArchitectureProject.Models.TransactionResultViewModel>
 
 @{
-    ViewData["Title"] = "TransactionResult";
+    ViewData["Title"] = "Résultats des Transactions";
 }
 
-<h1>TransactionResult</h1>
+<h1>Transactions result</h1>
 
-<div>
-    <h4>Transaction result</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Transaction.Username)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Transaction.Username)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Transaction.Amount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Transaction.Amount)
-        </dd>
-    </dl>
-</div>
-
-@if (!string.IsNullOrEmpty(Model.Message))
+@foreach (var item in Model)
 {
-    <div class="alert alert-info">
-        @Model.Message
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">User : @item.Transaction.Username</h5>
+            <p class="card-text">Credited amount : @item.Transaction.Amount CHF</p>
+
+            @if (!string.IsNullOrEmpty(item.Message))
+            {
+                <div class="alert alert-info">
+                    @item.Message
+                </div>
+            }
+        </div>
     </div>
 }
 
 <div>
-    <a asp-action="Index">Back to Services</a>
+    <a asp-action="SchoolToStudentList" class="btn btn-primary">Back to student List</a>
 </div>

@@ -1,4 +1,5 @@
 ﻿using MVC_ArchitectureProject.Models;
+using System.Text.Json;
 
 namespace MVC_ArchitectureProject.Services
 {
@@ -12,11 +13,11 @@ namespace MVC_ArchitectureProject.Services
             _httpClient = httpClient;
         }
 
-        public async Task<TransactionM> rechargeAccount(TransactionM transactionM)
+        public async Task<List<TransactionM>> rechargeAccount(List<TransactionM> listTransactionM)
         {
-            var response = await _httpClient.PostAsJsonAsync(_baseUrl + "/SchoolToStudent/", transactionM);
+            var response = await _httpClient.PostAsJsonAsync(_baseUrl + "/SchoolToStudent/", listTransactionM);
             response.EnsureSuccessStatusCode();
-            var transactionReturned = await response.Content.ReadFromJsonAsync<TransactionM>();
+            var transactionReturned = await response.Content.ReadFromJsonAsync<List<TransactionM>>();
             if (transactionReturned == null)
             {
                 throw new Exception("Failed to deserialize TransactionM from the API response.");
@@ -45,6 +46,17 @@ namespace MVC_ArchitectureProject.Services
             return await response.Content.ReadAsStringAsync();
         }
 
-
+        public async Task<List<UserBalanceModel>> GetAllUserBalance()
+        {
+            var response = await _httpClient.GetAsync(_baseUrl + "/Users/");
+            response.EnsureSuccessStatusCode();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            };
+            var students = JsonSerializer.Deserialize<List<UserBalanceModel>>(responseBody, options);
+            return students;
+        }
     }
 }
