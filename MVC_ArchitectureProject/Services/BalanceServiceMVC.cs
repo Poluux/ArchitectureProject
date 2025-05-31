@@ -6,11 +6,12 @@ namespace MVC_ArchitectureProject.Services
     public class BalanceServiceMVC : IBalanceServiceMVC
     {
         private readonly HttpClient _httpClient;
-        private readonly string _baseUrl = "https://localhost:7036/api/ArchitectureProjectAPI";
+        private readonly string _baseUrl;
 
-        public BalanceServiceMVC(HttpClient httpClient)
+        public BalanceServiceMVC(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _baseUrl = configuration["WebAPI:BaseUrl"];
         }
 
         public async Task<UserBalanceModel> GetBalanceAsync(string username)
