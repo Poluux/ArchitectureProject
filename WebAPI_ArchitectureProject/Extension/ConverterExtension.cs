@@ -37,14 +37,6 @@ namespace WebAPI_ArchitectureProject.Extension
                 Username = transactionM.Username,
                 Amount = transactionM.Amount,
                 Date = DateTime.Now
-                /*User = new User
-                {
-                    Username = transactionM.Username,
-                    Balance = 0,
-                    Quota = 0,
-                    IdCard = 0,
-                    Transactions = new List<Transaction>()
-                }*/
             };
         }
 

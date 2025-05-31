@@ -84,24 +84,6 @@ namespace MVC_ArchitectureProject.Controllers
             }
 
             return View("TransactionResult", resultsViewModel);
-            /*    var transaction = await _chargingServiceMVC.rechargeAccount(transactionM);
-                var nbrOfPages = await _quotaConversionServiceMVC.convertCHFtoPage(transactionM.Amount);
-
-                var updateUser = new UserBalanceModel
-                {
-                    Username = transactionM.Username,
-                    Balance = transactionM.Amount,
-                    Quota = nbrOfPages
-                };  
-
-                string updateMessage = await _chargingServiceMVC.UpdateBalanceAndQuota(updateUser);
-                var viewModel = new TransactionResultViewModel
-                {
-                    Transaction = transaction,
-                    Message = updateMessage
-                };
-
-                return View("TransactionResult", viewModel);    */
         }
 
         [HttpGet]

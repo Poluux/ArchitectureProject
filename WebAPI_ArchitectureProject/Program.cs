@@ -21,8 +21,8 @@ namespace WebAPI_ArchitectureProject
             builder.Services.AddScoped<IBalanceService, BalanceService>();
             builder.Services.AddScoped<IChargingService, ChargingService>();
             builder.Services.AddScoped<IQuotaConversionService, QuotaConversionService>();
-            builder.Services.AddDbContext<MS_SQLContext>(options => options.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=MS-SQL_Accounts"));
-            builder.Services.AddDbContext<PaymentContext>(options => options.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=PaymentDB"));
+            builder.Services.AddDbContext<MS_SQLContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("FirstConnection")));
+            builder.Services.AddDbContext<PaymentContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SecondConnection")));
 
 
             var app = builder.Build();

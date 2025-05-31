@@ -73,7 +73,6 @@ namespace WebAPI_ArchitectureProject.Business
                 Username = username,
                 Amount = model.Amount,
                 Date = DateTime.Now,
-                //UserId = user.UserId
             };
 
             _paymentContext.Transactions.Add(transaction);

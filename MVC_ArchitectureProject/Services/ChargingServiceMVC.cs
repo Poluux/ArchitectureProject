@@ -6,11 +6,12 @@ namespace MVC_ArchitectureProject.Services
     public class ChargingServiceMVC : IChargingServiceMVC
     {
         private readonly HttpClient _httpClient;
-        private readonly string _baseUrl = "https://localhost:7036/api/ArchitectureProjectAPI";
+        private readonly string _baseUrl;
 
-        public ChargingServiceMVC(HttpClient httpClient)
+        public ChargingServiceMVC(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _baseUrl = configuration["WebAPI:BaseUrl"];
         }
 
         public async Task<List<TransactionM>> rechargeAccount(List<TransactionM> listTransactionM)
@@ -42,7 +43,7 @@ namespace MVC_ArchitectureProject.Services
 
         public async Task<string> RechargeByCard(CardRechargeModel model)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/ArchitectureProjectAPI/rechargeByCard", model);
+            var response = await _httpClient.PostAsJsonAsync(_baseUrl + "/rechargeByCard", model);
             return await response.Content.ReadAsStringAsync();
         }
 
