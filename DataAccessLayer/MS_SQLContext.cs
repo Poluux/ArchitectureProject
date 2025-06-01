@@ -16,8 +16,8 @@ namespace DataAccessLayer
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=MS-SQL_Accounts")
-                            .UseSeeding((context, _) =>
+               // optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=MS-SQL_Accounts")
+                            optionsBuilder.UseSeeding((context, _) =>
                             {
                                 var user1 = new User() { Username = "John", Balance = 20, Quota = 15, IdCard = 555, Transactions = new List<Transaction>() };
                                 var userJohn = context.Set<User>().FirstOrDefault(u => u.Username == user1.Username);

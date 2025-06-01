@@ -27,12 +27,16 @@ namespace WebAPI_ArchitectureProject
 
             var app = builder.Build();
 
-            // Seeding de la base de données MS_SQLContext
-            using (var scope = app.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<MS_SQLContext>();
-                SeedDatabase(context);
-            }
+                // Seeding de la base de données MS_SQLContext
+                using (var scope = app.Services.CreateScope())
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<MS_SQLContext>();
+                  //  context.Database.Migrate();
+                  //  SeedDatabase(context);
+
+                    var paymentContext = scope.ServiceProvider.GetRequiredService<PaymentContext>();
+                  //  paymentContext.Database.Migrate(); // Crée les tables de la 2e DB   
+                }
 
             static void SeedDatabase(MS_SQLContext context)
             {
@@ -63,11 +67,10 @@ namespace WebAPI_ArchitectureProject
 
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
+            
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }
+            
 
             app.UseHttpsRedirection();
 
