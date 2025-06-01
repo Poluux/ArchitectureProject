@@ -20,8 +20,8 @@ namespace DataAccessLayer
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=PaymentDB")
-                .UseSeeding((context, _) =>
+               // optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=PaymentDB")
+                optionsBuilder.UseSeeding((context, _) =>
                 {
                     var transaction1 = new Transaction()
                     {

@@ -11,10 +11,7 @@ namespace MVC_ArchitectureProject
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient<IBalanceServiceMVC, BalanceServiceMVC>();
-            builder.Services.AddHttpClient<IChargingServiceMVC, ChargingServiceMVC>(client =>
-            {
-                client.BaseAddress = new Uri("https://localhost:7036/"); // Mets ici l'URL exacte de ton API
-            });
+            builder.Services.AddHttpClient<IChargingServiceMVC, ChargingServiceMVC>();
             builder.Services.AddHttpClient<IQuotaConversionServiceMVC, QuotaConversionServiceMVC>();
 
             var app = builder.Build();
