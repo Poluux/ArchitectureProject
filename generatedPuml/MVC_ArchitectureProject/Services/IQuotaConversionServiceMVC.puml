@@ -1,0 +1,5 @@
+@startuml
+interface IQuotaConversionServiceMVC {
+    convertCHFtoPage(amount:double) : Task<int>
+}
+@enduml

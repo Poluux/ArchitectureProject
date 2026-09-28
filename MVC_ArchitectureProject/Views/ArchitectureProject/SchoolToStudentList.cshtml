@@ -1,0 +1,60 @@
+﻿@model IEnumerable<MVC_ArchitectureProject.Models.UserBalanceModel>
+
+@{
+    ViewData["Title"] = "SchoolToStudentList";
+}
+
+<h1>Students List</h1>
+
+<!-- Affichage des erreurs de validation -->
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<form asp-action="SchoolToStudent">
+    <div class="form-group">
+        <label for="Amount" class="control-label">Amount:</label>
+        <input name="amount" class="form-control" />
+    </div>
+    <div class="form-group">
+        <button type="submit"class="btn btn-primary">Send</button>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to services</a>
+    </div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Selection</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Balance)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quota)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <input type="checkbox" name="selectedUsernames" value="@item.Username"/>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Balance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quota)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</form>

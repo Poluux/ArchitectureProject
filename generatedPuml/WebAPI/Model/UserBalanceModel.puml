@@ -1,0 +1,7 @@
+@startuml
+class UserBalanceModel {
+    + Username : string <<get>> <<set>>
+    + Balance : double <<get>> <<set>>
+    + Quota : int <<get>> <<set>>
+}
+@enduml

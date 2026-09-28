@@ -1,0 +1,10 @@
+@startuml
+interface IChargingService {
+    PostTransactionList(listTransaction:List<Transaction>) : Task<List<Transaction>>
+    PostTransaction(transaction:Transaction) : Task<Transaction>
+    UpdateBalanceAndQuota(userUpdate:User) : Task<string>
+    GetUsernameByCardId(cardId:int) : Task<string?>
+    RechargeByCard(model:CardRechargeModel) : Task<string>
+    GetAllUserBalance() : Task<IEnumerable<User>>
+}
+@enduml

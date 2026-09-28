@@ -1,0 +1,15 @@
+@startuml
+class ChargingService {
+    - <<readonly>> _paymentContext : PaymentContext
+    - <<readonly>> _sqlContext : MS_SQLContext
+    - <<readonly>> _quotaConversionService : IQuotaConversionService
+    + ChargingService(paymentContext:PaymentContext, sqlContext:MS_SQLContext, quotaConversionService:IQuotaConversionService)
+    + <<async>> PostTransactionList(listTransaction:List<Transaction>) : Task<List<Transaction>>
+    + <<async>> PostTransaction(transaction:Transaction) : Task<Transaction>
+    + <<async>> UpdateBalanceAndQuota(userUpdate:User) : Task<string>
+    + <<async>> GetUsernameByCardId(cardId:int) : Task<string?>
+    + <<async>> RechargeByCard(model:CardRechargeModel) : Task<string>
+    + <<async>> GetAllUserBalance() : Task<IEnumerable<User>>
+}
+IChargingService <|-- ChargingService
+@enduml

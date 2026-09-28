@@ -1,0 +1,8 @@
+@startuml
+class ConverterExtension <<static>> {
+    + {static} ToUserBalanceModel(user:DataAccessLayer.Models.User) : WebAPI_ArchitectureProject.Model.UserBalanceModel
+    + {static} toUserDAL(userBalanceModel:WebAPI_ArchitectureProject.Model.UserBalanceModel) : DataAccessLayer.Models.User
+    + {static} ToTransactionDAL(transactionM:WebAPI_ArchitectureProject.Model.TransactionM) : DataAccessLayer.Models.Transaction
+    + {static} ToTranscationM(transaction:DataAccessLayer.Models.Transaction) : WebAPI_ArchitectureProject.Model.TransactionM
+}
+@enduml

@@ -1,0 +1,28 @@
+﻿@model List<MVC_ArchitectureProject.Models.TransactionResultViewModel>
+
+@{
+    ViewData["Title"] = "Résultats des Transactions";
+}
+
+<h1>Transactions result</h1>
+
+@foreach (var item in Model)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">User : @item.Transaction.Username</h5>
+            <p class="card-text">Credited amount : @item.Transaction.Amount CHF</p>
+
+            @if (!string.IsNullOrEmpty(item.Message))
+            {
+                <div class="alert alert-info">
+                    @item.Message
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<div>
+    <a asp-action="SchoolToStudentList" class="btn btn-primary">Back to student List</a>
+</div>

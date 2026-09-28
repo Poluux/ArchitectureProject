@@ -1,0 +1,7 @@
+@startuml
+class QuotaConversionService {
+    - <<const>> ratioCHftoPages : double = 0.08
+    + <<async>> convertCHFtoPage(amount:double) : Task<int>
+}
+IQuotaConversionService <|-- QuotaConversionService
+@enduml

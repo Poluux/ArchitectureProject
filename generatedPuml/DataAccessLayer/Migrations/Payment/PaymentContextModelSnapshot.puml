@@ -1,0 +1,6 @@
+@startuml
+class PaymentContextModelSnapshot <<partial>> {
+    # <<override>> BuildModel(modelBuilder:ModelBuilder) : void
+}
+ModelSnapshot <|-- PaymentContextModelSnapshot
+@enduml

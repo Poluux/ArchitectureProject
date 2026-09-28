@@ -1,0 +1,9 @@
+@startuml
+class BalanceService {
+    - <<readonly>> _sqlContext : MS_SQLContext
+    + BalanceService(sqlContext:MS_SQLContext)
+    + <<async>> FetchBalanceByUsername(username:string) : Task<User>
+    + <<async>> GetUsernameByCardId(cardId:int) : Task<User>
+}
+IBalanceService <|-- BalanceService
+@enduml

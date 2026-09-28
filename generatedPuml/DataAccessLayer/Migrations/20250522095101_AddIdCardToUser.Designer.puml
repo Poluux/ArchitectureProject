@@ -1,0 +1,5 @@
+@startuml
+class AddIdCardToUser <<partial>> {
+    # <<override>> BuildTargetModel(modelBuilder:ModelBuilder) : void
+}
+@enduml
